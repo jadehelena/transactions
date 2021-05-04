@@ -19,6 +19,9 @@ class Account {
         this.document = document
     }
 
+    Account() {
+    }
+
     Long getId() {
         return id
     }

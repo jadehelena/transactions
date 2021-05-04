@@ -21,4 +21,9 @@ class AccountService {
             new ResponseStatusException(HttpStatus.NOT_FOUND, "account not found")
         })
     }
+
+    @Transactional
+    Account save(Account account){
+        accountRepository.save(account)
+    }
 }

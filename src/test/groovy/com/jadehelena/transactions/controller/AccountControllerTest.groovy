@@ -1,5 +1,6 @@
 package com.jadehelena.transactions.controller
 
+import com.jadehelena.transactions.domain.Account
 import com.jadehelena.transactions.service.AccountService
 import com.jadehelena.transactions.util.creators.AccountCreator
 import org.junit.jupiter.api.DisplayName
@@ -10,6 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.server.ResponseStatusException
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -26,8 +30,8 @@ class AccountControllerTest {
     private MockMvc mockMvc
 
     @Test
-    @DisplayName("Should return success when get existing person")
-    void shouldReturnSuccess_WhenGetExistingPerson() {
+    @DisplayName("Should return success when get existing account")
+    void shouldReturnSuccess_WhenGetExistingAccount() {
         Mockito.when(this.accountService.findByIdOrThrowBadRequestException(1L))
                 .thenReturn(AccountCreator.createPersistedAccount())
 
@@ -39,8 +43,8 @@ class AccountControllerTest {
     }
 
     @Test
-    @DisplayName("Should return not found when get non existing person")
-    void shouldReturnSuccess_WhenGetNonExistingPerson() {
+    @DisplayName("Should return not found when get non existing account")
+    void shouldReturnSuccess_WhenGetNonExistingAccount() {
         Mockito.when(this.accountService.findByIdOrThrowBadRequestException(2L))
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "account not found"))
 
@@ -48,5 +52,28 @@ class AccountControllerTest {
                 get("/accounts/{id}", 2L)
                 .header("Content-Type", "application/json"))
                 .andExpect(status().isNotFound())
+    }
+
+    @Test
+    @DisplayName("Should return success when post account")
+    void shouldReturnSuccess_WhenPostAccount() {
+        Mockito.when(this.accountService.save(Mockito.any(Account.class)))
+                .thenReturn(AccountCreator.createPersistedAccount())
+
+        mockMvc.perform( MockMvcRequestBuilders
+                .post("/accounts")
+                .content("{\"document\": \"02193246573\"}")
+                .header("Content-Type", "application/json"))
+                .andExpect(status().isCreated())
+    }
+
+    @Test
+    @DisplayName("Should return bad request when post account blank document")
+    void shouldReturnSuccess_WhenPostAccountBlankDocument() {
+        mockMvc.perform( MockMvcRequestBuilders
+                .post("/accounts")
+                .content("{\"document\": \"\"}")
+                .header("Content-Type", "application/json"))
+                .andExpect(status().isBadRequest())
     }
 }
