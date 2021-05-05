@@ -37,7 +37,7 @@ class AccountControllerTest {
                 get("/accounts/{id}", 1L)
                 .header("Content-Type", "application/json"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{'document':'02193246573'}"))
+                .andExpect(content().json("{'documentNumber':'02193246573'}"))
     }
 
     @Test
@@ -60,7 +60,7 @@ class AccountControllerTest {
 
         mockMvc.perform( MockMvcRequestBuilders
                 .post("/accounts")
-                .content("{\"document\": \"02193246573\"}")
+                .content("{\"documentNumber\": \"02193246573\"}")
                 .header("Content-Type", "application/json"))
                 .andExpect(status().isCreated())
     }
@@ -70,7 +70,7 @@ class AccountControllerTest {
     void shouldReturnBadRequest_WhenPostAccountBlankDocument() {
         mockMvc.perform( MockMvcRequestBuilders
                 .post("/accounts")
-                .content("{\"document\": \"\"}")
+                .content("{\"documentNumber\": \"\"}")
                 .header("Content-Type", "application/json"))
                 .andExpect(status().isBadRequest())
     }
