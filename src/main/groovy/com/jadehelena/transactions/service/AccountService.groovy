@@ -18,7 +18,7 @@ class AccountService {
 
     Account findByIdOrThrowBadRequestException(long id) {
         accountRepository.findById(id).orElseThrow({
-            new ResponseStatusException(HttpStatus.NOT_FOUND, "account not found")
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "account id not found")
         })
     }
 

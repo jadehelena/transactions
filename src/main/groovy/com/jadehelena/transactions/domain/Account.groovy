@@ -1,22 +1,30 @@
 package com.jadehelena.transactions.domain
 
+import org.hibernate.validator.constraints.Length
+
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 @Entity
 class Account {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id
-    @NotNull @NotEmpty
-    private String document
 
-    Account(Long id, String document) {
+    @NotNull @NotEmpty @Size(min=11, max=11, message="document must have 11 digits")
+    private String documentNumber
+
+    @OneToMany(mappedBy = "account")
+    List<Transaction> getTransactions() { }
+
+    Account(Long id, String documentNumber) {
         this.id = id
-        this.document = document
+        this.documentNumber = documentNumber
     }
 
     Account() {
@@ -30,11 +38,12 @@ class Account {
         this.id = id
     }
 
-    String getDocument() {
-        return document
+    String getDocumentNumber() {
+        return documentNumber
     }
 
-    void setDocument(String document) {
-        this.document = document
+    void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber
     }
+
 }

@@ -67,7 +67,7 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("Should return bad request when post account blank document")
-    void shouldReturnSuccess_WhenPostAccountBlankDocument() {
+    void shouldReturnBadRequest_WhenPostAccountBlankDocument() {
         mockMvc.perform( MockMvcRequestBuilders
                 .post("/accounts")
                 .content("{\"document\": \"\"}")
