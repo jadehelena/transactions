@@ -17,9 +17,6 @@ class TransactionService {
     @Autowired
     TransactionRepository transactionRepository
 
-    @Autowired
-    AccountService accountService
-
     @Transactional
     Transaction save(Transaction transaction) {
         validatesTransactionParams(transaction)
@@ -30,7 +27,6 @@ class TransactionService {
     def validatesTransactionParams(Transaction transaction) {
         OperationTypeEnum operationTypeEnum = checkIfEnumExists(transaction)
         setNegativeAmountByOperationType(operationTypeEnum, transaction)
-        accountService.findByIdOrThrowBadRequestException(transaction.account.getId())
     }
 
     OperationTypeEnum checkIfEnumExists(Transaction transaction) {

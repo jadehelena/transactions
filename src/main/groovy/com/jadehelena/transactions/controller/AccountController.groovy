@@ -1,5 +1,6 @@
 package com.jadehelena.transactions.controller
 
+import com.jadehelena.transactions.controller.dto.AccountDto
 import com.jadehelena.transactions.domain.Account
 import com.jadehelena.transactions.service.AccountService
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,11 +25,13 @@ class AccountController {
 
     @GetMapping('{id}')
     ResponseEntity<Account> findOne(@PathVariable long id) {
-        ResponseEntity.ok(accountService.findByIdOrThrowBadRequestException(id))
+        Account account = accountService.findByIdOrThrowBadRequestException(id)
+        ResponseEntity.ok(new AccountDto(account))
     }
 
     @PostMapping
     ResponseEntity<Account> save(@RequestBody @Valid Account account) {
-        new ResponseEntity<>(accountService.save(account), HttpStatus.CREATED)
+        Account persistedAccount = accountService.save(account)
+        new ResponseEntity<>(new AccountDto(persistedAccount), HttpStatus.CREATED)
     }
 }

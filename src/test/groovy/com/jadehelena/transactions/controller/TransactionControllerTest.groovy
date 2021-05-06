@@ -1,7 +1,8 @@
 package com.jadehelena.transactions.controller
 
-import com.jadehelena.transactions.domain.Transaction
+import com.jadehelena.transactions.service.AccountService
 import com.jadehelena.transactions.service.TransactionService
+import com.jadehelena.transactions.util.creators.AccountCreator
 import com.jadehelena.transactions.util.creators.TransactionCreator
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -21,21 +22,28 @@ class TransactionControllerTest {
     @MockBean
     private TransactionService transactionService
 
+    @MockBean
+    private AccountService accountService
+
     @Autowired
     private MockMvc mockMvc
 
     @Test
     @DisplayName("Should return success when post transaction")
     void shouldReturnSuccess_WhenPostTransaction() {
-        Mockito.when(this.transactionService.save(Mockito.any(Transaction.class)))
+        Mockito.when(transactionService.save(Mockito.any()))
                 .thenReturn(TransactionCreator.createPersistedTransaction())
+
+        Mockito.when(accountService.findByIdOrThrowBadRequestException(1L))
+                .thenReturn(AccountCreator.createPersistedAccount())
 
         mockMvc.perform( MockMvcRequestBuilders
                 .post("/transactions")
-                .content("{\"operationType\": 1, \"account\": {\"id\": 1}, \"amount\": 20.0}")
+                .content("{\"operationType\": 1, \"accountId\": 1, \"amount\": 20.0}")
                 .header("Content-Type", "application/json"))
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{\"amount\": -20.0}"))
+                .andExpect(content().json("{\"operationType\": 1}"))
     }
 
 }

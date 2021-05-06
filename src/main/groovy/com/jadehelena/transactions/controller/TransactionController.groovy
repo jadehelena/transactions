@@ -1,6 +1,9 @@
 package com.jadehelena.transactions.controller
 
+import com.jadehelena.transactions.controller.dto.TransactionDto
+import com.jadehelena.transactions.controller.form.TransactionForm
 import com.jadehelena.transactions.domain.Transaction
+import com.jadehelena.transactions.service.AccountService
 import com.jadehelena.transactions.service.TransactionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -19,8 +22,14 @@ class TransactionController {
     @Autowired
     TransactionService transactionService
 
+    @Autowired
+    AccountService accountService
+
     @PostMapping
-    ResponseEntity<Transaction> save(@RequestBody @Valid Transaction transaction) {
-        new ResponseEntity<>(transactionService.save(transaction), HttpStatus.CREATED)
+    ResponseEntity<Transaction> save(@RequestBody @Valid TransactionForm transactionForm) {
+        Transaction transaction = transactionForm.convertToTransaction(accountService)
+        Transaction persistedTransaction = transactionService.save(transaction)
+
+        new ResponseEntity<>(new TransactionDto(persistedTransaction), HttpStatus.CREATED)
     }
 }

@@ -32,8 +32,7 @@ class Transaction {
     Transaction() {
     }
 
-    Transaction(Long id, int operationType, Double amount, Account account) {
-        this.id = id
+    Transaction(int operationType, Double amount, Account account) {
         this.operationType = operationType
         this.amount = amount
         this.account = account
