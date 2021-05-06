@@ -28,13 +28,13 @@ class TransactionService {
     }
 
     def validatesTransactionParams(Transaction transaction) {
-        def operationTypeEnum = checkIfEnumExist(transaction)
-        setNegativeAmountAccordingToEnum(operationTypeEnum, transaction)
+        OperationTypeEnum operationTypeEnum = checkIfEnumExists(transaction)
+        setNegativeAmountByOperationType(operationTypeEnum, transaction)
         accountService.findByIdOrThrowBadRequestException(transaction.account.getId())
     }
 
-    def checkIfEnumExist(Transaction transaction) {
-        def operationTypeEnum = OperationTypeEnum.findEnumByType(transaction.getOperationType())
+    OperationTypeEnum checkIfEnumExists(Transaction transaction) {
+        OperationTypeEnum operationTypeEnum = OperationTypeEnum.findByType(transaction.getOperationType())
         if(operationTypeEnum == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "invalid operationType")
         }
@@ -42,7 +42,7 @@ class TransactionService {
         operationTypeEnum
     }
 
-    def setNegativeAmountAccordingToEnum(operationType, transaction) {
+    def setNegativeAmountByOperationType(operationType, transaction) {
         if(operationType in OperationTypeEnum.negativeAmountEnums()) {
             transaction.setAmount(transaction.amount * -1)
         }

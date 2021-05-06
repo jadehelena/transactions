@@ -12,7 +12,7 @@ enum OperationTypeEnum {
         this.value = value
     }
 
-    static def allEnums(){
+    static List<OperationTypeEnum> allEnums(){
         Arrays.asList(OperationTypeEnum.values())
     }
 
@@ -20,18 +20,7 @@ enum OperationTypeEnum {
         [IN_CASH_PURCHASE, WITH_INSTALLMENTS_PURCHASE, WITHDRAW]
     }
 
-    static def findEnumByType(int type) {
-        switch (type) {
-            case 1:
-                return IN_CASH_PURCHASE
-            case 2:
-                return WITH_INSTALLMENTS_PURCHASE
-            case 3:
-                return WITHDRAW
-            case 4:
-                return PAYMENT
-            default:
-                return null
-        }
+    static OperationTypeEnum findByType(int operationType) {
+        values().find { operationTypeEnum -> operationTypeEnum.value == operationType }
     }
 }
