@@ -5,9 +5,7 @@ import com.jadehelena.transactions.domain.Transaction
 import com.jadehelena.transactions.enums.OperationTypeEnum
 import com.jadehelena.transactions.repository.TransactionRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
 
 import javax.transaction.Transactional
 
@@ -24,22 +22,13 @@ class TransactionService {
         transactionRepository.save(transaction)
     }
 
-    def validatesTransactionParams(Transaction transaction) {
-        OperationTypeEnum operationTypeEnum = checkIfEnumExists(transaction)
-        setNegativeAmountByOperationType(operationTypeEnum, transaction)
+    def validatesTransactionParams(transaction) {
+        OperationTypeEnum operationTypeEnum = OperationTypeEnum.getOperationTypeEnumIfExists(transaction)
+        setNegativeAmountIfDebitOperation(operationTypeEnum, transaction)
     }
 
-    OperationTypeEnum checkIfEnumExists(Transaction transaction) {
-        OperationTypeEnum operationTypeEnum = OperationTypeEnum.findByType(transaction.getOperationType())
-        if(operationTypeEnum == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "invalid operationType")
-        }
-
-        operationTypeEnum
-    }
-
-    def setNegativeAmountByOperationType(operationType, transaction) {
-        if(operationType in OperationTypeEnum.negativeAmountEnums()) {
+    def setNegativeAmountIfDebitOperation(operationTypeEnum, transaction) {
+        if(operationTypeEnum in OperationTypeEnum.debitOperations()) {
             transaction.setAmount(transaction.amount * -1)
         }
     }

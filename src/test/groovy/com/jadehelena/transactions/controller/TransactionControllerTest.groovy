@@ -32,10 +32,10 @@ class TransactionControllerTest {
     @DisplayName("Should return success when post transaction")
     void shouldReturnSuccess_WhenPostTransaction() {
         Mockito.when(transactionService.save(Mockito.any()))
-                .thenReturn(TransactionCreator.createPersistedTransaction())
+                .thenReturn(TransactionCreator.createMockedPersistedTransaction())
 
         Mockito.when(accountService.findByIdOrThrowBadRequestException(1L))
-                .thenReturn(AccountCreator.createPersistedAccount())
+                .thenReturn(AccountCreator.createMockedPersistedAccount())
 
         mockMvc.perform( MockMvcRequestBuilders
                 .post("/transactions")

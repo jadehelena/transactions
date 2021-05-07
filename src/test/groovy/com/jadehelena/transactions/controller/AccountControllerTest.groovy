@@ -31,7 +31,7 @@ class AccountControllerTest {
     @DisplayName("Should return success when get existing account")
     void shouldReturnSuccess_WhenGetExistingAccount() {
         Mockito.when(this.accountService.findByIdOrThrowBadRequestException(1L))
-                .thenReturn(AccountCreator.createPersistedAccount())
+                .thenReturn(AccountCreator.createMockedPersistedAccount())
 
         mockMvc.perform(
                 get("/accounts/{id}", 1L)
@@ -56,7 +56,7 @@ class AccountControllerTest {
     @DisplayName("Should return success when post account")
     void shouldReturnSuccess_WhenPostAccount() {
         Mockito.when(this.accountService.save(Mockito.any(Account.class)))
-                .thenReturn(AccountCreator.createPersistedAccount())
+                .thenReturn(AccountCreator.createMockedPersistedAccount())
 
         mockMvc.perform( MockMvcRequestBuilders
                 .post("/accounts")
