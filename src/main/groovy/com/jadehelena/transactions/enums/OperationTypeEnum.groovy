@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 enum OperationTypeEnum {
-    IN_CASH_PURCHASE(1),
+    CASH_PURCHASE(1),
     WITH_INSTALLMENTS_PURCHASE(2),
     WITHDRAW(3),
     PAYMENT(4)
@@ -17,7 +17,7 @@ enum OperationTypeEnum {
     }
 
     static def debitOperations(){
-        [IN_CASH_PURCHASE, WITH_INSTALLMENTS_PURCHASE, WITHDRAW]
+        [CASH_PURCHASE, WITH_INSTALLMENTS_PURCHASE, WITHDRAW]
     }
 
     static def creditOperations(){
