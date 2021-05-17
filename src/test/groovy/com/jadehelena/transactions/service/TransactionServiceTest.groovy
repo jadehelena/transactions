@@ -26,6 +26,9 @@ class TransactionServiceTest {
     @Mock
     private TransactionRepository transactionRepository
 
+    @Mock
+    private AccountService accountService
+
     @Spy
     private TransactionService transactionServiceMock
 
@@ -70,6 +73,19 @@ class TransactionServiceTest {
 
         Assertions.assertThrows(ResponseStatusException.class, { ->
             transactionService.save(transaction)
+        })
+    }
+
+    @DisplayName("Should return bad request when doesnt exists available credit limit for transaction")
+    @Test
+    void shouldReturnBadRequest_WhenDoesntExistsAvailableCreditLimitForTransaction() {
+        Transaction transaction = TransactionCreator.createMockedInsufficentAmountPersistedTransaction()
+
+        Mockito.doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "This account doesnt have enough available credit limit"))
+                .when(transactionServiceMock).validatesTransactionParams(Mockito.any(Transaction.class))
+
+        Assertions.assertThrows(ResponseStatusException.class, { ->
+            transactionServiceMock.save(transaction)
         })
     }
 }

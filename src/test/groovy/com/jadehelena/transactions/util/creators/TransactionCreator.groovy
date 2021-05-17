@@ -8,6 +8,10 @@ class TransactionCreator {
         new Transaction(1, -20.00, AccountCreator.createMockedPersistedAccount())
     }
 
+    static Transaction createMockedInsufficentAmountPersistedTransaction() {
+        new Transaction(1, 6000.00, AccountCreator.createMockedPersistedAccount())
+    }
+
     static Transaction createMockedTransactionWithOperationTypeAsWithdraw() {
         new Transaction(3, 35.00, AccountCreator.createMockedPersistedAccount())
     }

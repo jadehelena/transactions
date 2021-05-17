@@ -19,12 +19,15 @@ class Account {
     @NotNull @NotEmpty @Size(min=11, max=11, message="document must have 11 digits")
     private String documentNumber
 
+    private Double availableCreditLimit = 5000.00
+
     @OneToMany(mappedBy = "account")
     List<Transaction> getTransactions() { }
 
-    Account(Long id, String documentNumber) {
+    Account(Long id, String documentNumber, Double availableCreditLimit) {
         this.id = id
         this.documentNumber = documentNumber
+        this.availableCreditLimit = availableCreditLimit
     }
 
     Account() {
@@ -46,4 +49,11 @@ class Account {
         this.documentNumber = documentNumber
     }
 
+    Double getAvailableCreditLimit() {
+        return availableCreditLimit
+    }
+
+    void setAvailableCreditLimit(Double availableCreditLimit) {
+        this.availableCreditLimit = availableCreditLimit
+    }
 }

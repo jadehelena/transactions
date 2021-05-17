@@ -1,12 +1,16 @@
 package com.jadehelena.transactions.service
 
 import com.jadehelena.transactions.domain.Account
+import com.jadehelena.transactions.domain.Transaction
+import com.jadehelena.transactions.enums.OperationTypeEnum
 import com.jadehelena.transactions.repository.AccountRepository
 import com.jadehelena.transactions.util.creators.AccountCreator
+import com.jadehelena.transactions.util.creators.TransactionCreator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.function.Executable
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -58,5 +62,28 @@ class AccountServiceTest {
         Account persistedAccount = accountService.save(account)
 
         Assertions.assertTrue(persistedAccount instanceof Account)
+    }
+
+    @DisplayName("Should return success when account has enough availableCreditLimit")
+    @Test
+    void shouldReturnSuccess_WhenAccountHasEnoughAvailableCreditLimit() {
+        Transaction transaction = TransactionCreator.createMockedTransactionWithOperationTypeAsWithdraw()
+
+        Assertions.assertDoesNotThrow(new Executable() {
+            @Override
+            void execute() throws Throwable {
+                accountService.checkIfAvailableCreditLimitExist(transaction, OperationTypeEnum.WITHDRAW)
+            }
+        })
+    }
+
+    @DisplayName("Should return bad request when account doesnt have enough availableCreditLimit")
+    @Test
+    void shouldReturnBadRequest_WhenAccountDoesntHaveEnoughAvailableCreditLimit() {
+        Transaction transaction = TransactionCreator.createMockedInsufficentAmountPersistedTransaction()
+
+        Assertions.assertThrows(ResponseStatusException.class, { ->
+            accountService.checkIfAvailableCreditLimitExist(transaction, OperationTypeEnum.WITHDRAW)
+        })
     }
 }
